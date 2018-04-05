@@ -238,8 +238,6 @@ FVector2D AVRCharacter::GetBlinkerCenter()
 	FVector2D ScreenLocation;
 	if (PlayerController->ProjectWorldLocationToScreen(WorldStationaryLocation, ScreenLocation))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Projection to screen successful"));
-
 		int32 ViewportSizeX;
 		int32 ViewportSizeY;
 		PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);

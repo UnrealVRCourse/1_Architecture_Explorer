@@ -26,9 +26,25 @@ public:
 	void SetHand(EControllerHand Hand);
 
 private:
+	// Default Sub Objects
 	UPROPERTY(VisibleAnywhere)
 	class UMotionControllerComponent* MotionController;
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* ControllerMeshComponent;
-	
+
+	// Callbacks
+	UFUNCTION()
+	void ActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
+	UFUNCTION()
+	void ActorEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
+
+	//Configuration
+	UPROPERTY(EditDefaultsOnly)
+	class UHapticFeedbackEffect_Base* HapticEffect;
+
+	// Helpers
+	bool CanClimb() const;
+
+	// State
+	bool bCanClimb = false;
 };
