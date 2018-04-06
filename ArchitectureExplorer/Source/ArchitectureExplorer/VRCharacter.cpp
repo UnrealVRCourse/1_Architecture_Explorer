@@ -13,7 +13,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/SplineComponent.h"
 #include "Components/SplineMeshComponent.h"
-#include "HandController.h"
 #include "ConstructorHelpers.h"
 
 
@@ -65,6 +64,11 @@ void AVRCharacter::BeginPlay()
 			RightController->AttachToComponent(VRRoot, FAttachmentTransformRules::KeepRelativeTransform);
 			RightController->SetHand(EControllerHand::Right);
 		}
+	}
+
+	if(LeftController != nullptr && RightController != nullptr)
+	{
+		LeftController->PairController(RightController);
 	}
 }
 
@@ -139,10 +143,14 @@ void AVRCharacter::UpdateDestinationMarker()
 void AVRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
 	PlayerInputComponent->BindAxis("MoveForward", this, &AVRCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AVRCharacter::MoveRight);
-
 	PlayerInputComponent->BindAction("Teleport", IE_Released, this, &AVRCharacter::BeginTeleport);
+	PlayerInputComponent->BindAction("GripLeft", IE_Pressed, this, &AVRCharacter::GripLeft);
+	PlayerInputComponent->BindAction("GripLeft", IE_Released, this, &AVRCharacter::ReleaseLeft);
+	PlayerInputComponent->BindAction("GripRight", IE_Pressed, this, &AVRCharacter::GripRight);
+	PlayerInputComponent->BindAction("GripRight", IE_Released, this, &AVRCharacter::ReleaseRight);
 }
 
 void AVRCharacter::UpdateBlinkers()

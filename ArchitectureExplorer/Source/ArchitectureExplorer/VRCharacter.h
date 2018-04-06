@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "HandController.h"
 #include "VRCharacter.generated.h"
 
 UCLASS()
@@ -29,9 +30,9 @@ public:
 private:
 
 	UPROPERTY()
-	class AHandController* LeftController;
+	AHandController* LeftController;
 	UPROPERTY()
-	class AHandController* RightController;
+	AHandController* RightController;
 	UPROPERTY()
 	class UCameraComponent* Camera;
 	UPROPERTY()
@@ -82,6 +83,12 @@ private:
 	bool FindTeleportDestination(FVector & OutLocation);
 	void MoveForward(float AxisIn);
 	void MoveRight(float AxisIn);
+
+	void GripLeft() { LeftController->Grip(); }
+	void ReleaseLeft() { LeftController->Release(); }
+	void GripRight() { RightController->Grip(); }
+	void ReleaseRight() { RightController->Release(); }
+
 	void UpdateDestinationMarker();
 	void BeginTeleport();
 	void FinishTeleport();

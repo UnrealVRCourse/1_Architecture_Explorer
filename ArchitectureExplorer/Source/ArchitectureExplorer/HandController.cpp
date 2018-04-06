@@ -5,6 +5,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/PlayerController.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Haptics/HapticFeedbackEffect_Base.h"
 
 
@@ -35,6 +37,22 @@ void AHandController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (bIsClimbing)
+	{
+		APawn* Player = Cast<APawn>(GetAttachParentActor());
+		if (Player)
+		{
+			FVector Offset = GetActorLocation() - ClimbingStartLocation;
+			Player->AddActorWorldOffset(-Offset);
+		}
+	}
+
+}
+
+void AHandController::PairController(AHandController* Controller)
+{
+	OtherController = Controller;
+	OtherController->OtherController = this;
 }
 
 void AHandController::SetHand(EControllerHand Hand)
@@ -77,4 +95,34 @@ bool AHandController::CanClimb() const
 		}
 	}
 	return false;
+}
+
+void AHandController::Grip()
+{
+	if (CanClimb() && !bIsClimbing)
+	{
+		bIsClimbing = true;
+		ClimbingStartLocation = GetActorLocation();
+		OtherController->bIsClimbing = false;
+		ACharacter* Character = Cast<ACharacter>(GetAttachParentActor());
+		if (Character != nullptr)
+		{
+			Character->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
+		}
+	}
+}
+
+void AHandController::Release()
+{
+	if (bIsClimbing)
+	{
+		bIsClimbing = false;
+
+		ACharacter* Character = Cast<ACharacter>(GetAttachParentActor());
+		if (Character != nullptr)
+		{
+			Character->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Falling);
+		}
+	}
+
 }

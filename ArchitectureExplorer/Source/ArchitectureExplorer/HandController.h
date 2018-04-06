@@ -15,6 +15,12 @@ public:
 	// Sets default values for this actor's properties
 	AHandController();
 
+	void SetHand(EControllerHand Hand);
+	void PairController(AHandController* Controller);
+
+	void Grip();
+	void Release();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -22,8 +28,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	void SetHand(EControllerHand Hand);
 
 private:
 	// Default Sub Objects
@@ -45,6 +49,11 @@ private:
 	// Helpers
 	bool CanClimb() const;
 
+
 	// State
 	bool bCanClimb = false;
+	bool bIsClimbing = false;
+	FVector ClimbingStartLocation;
+
+	AHandController* OtherController;
 };
